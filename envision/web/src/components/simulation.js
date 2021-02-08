@@ -41,6 +41,7 @@ import DrivenPaths from "./driven_paths.js";
 import MissionRoutes from "./mission_routes.js";
 import Waypoints from "./waypoints.js";
 import TrafficDividers from "./traffic_dividers.js";
+import ControlPanel from "./control_panel.js"
 
 import AgentScores from "./agent_scores";
 import earcut from "earcut";
@@ -212,6 +213,10 @@ export default function Simulation({
     <div
       style={{ position: "relative", width: "100%", height: "100%", ...style }}
     >
+      <ControlPanel
+        scores={worldState.scores}
+        showPanel={showScores}
+      />
       <SceneComponent
         antialias
         onSceneReady={onSceneReady}
@@ -257,8 +262,7 @@ export default function Simulation({
         laneDividerPos={laneDividerPos}
         edgeDividerPos={edgeDividerPos}
       />
-      {showScores ? (
-        <AgentScores
+      {/* <AgentScores
           style={{
             zIndex: "1",
             position: "absolute",
@@ -267,8 +271,7 @@ export default function Simulation({
             maxWidth: "100%",
           }}
           scores={worldState.scores}
-        />
-      ) : null}
+        /> */}
     </div>
   );
 }
