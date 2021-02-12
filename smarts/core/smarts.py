@@ -930,7 +930,10 @@ class SMARTS(ShowBase):
                 speed[agent_id] = v.speed
                 position[agent_id] = v.pose.position[:2]
                 heading[agent_id] = v.pose.heading
-                if len(vehicle_obs.waypoint_paths) > 0 and len(vehicle_obs.waypoint_paths[0]) > 0:
+                if (
+                    len(vehicle_obs.waypoint_paths) > 0
+                    and len(vehicle_obs.waypoint_paths[0]) > 0
+                ):
                     lane_ids[agent_id] = vehicle_obs.waypoint_paths[0][0].lane_id
             elif v.vehicle_id in self._vehicle_index.social_vehicle_ids():
                 # this is a social vehicle
@@ -957,7 +960,7 @@ class SMARTS(ShowBase):
             position=position,
             speed=speed,
             heading=heading,
-            lane_ids=lane_ids
+            lane_ids=lane_ids,
         )
         self._envision.send(state)
 

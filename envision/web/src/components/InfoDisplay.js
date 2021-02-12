@@ -19,7 +19,13 @@
 // THE SOFTWARE.
 import React from "react";
 
-export default function InfoDisplay({ data, ego_agent_ids, attrName, ego_only=false, data_formattter}) {
+export default function InfoDisplay({
+  data,
+  ego_agent_ids,
+  attrName,
+  ego_only = false,
+  data_formattter,
+}) {
   return (
     <table style={{ margin: "15px", tableLayout: "auto" }}>
       <thead>
@@ -35,9 +41,7 @@ export default function InfoDisplay({ data, ego_agent_ids, attrName, ego_only=fa
           }
           return (
             <tr key={`data-body-${id}`}>
-              <td style={{ paddingRight: "15px" }}>
-                {data_formattter(score)}
-              </td>
+              <td style={{ paddingRight: "15px" }}>{data_formattter(score)}</td>
               <td
                 style={{
                   maxWidth: "400px",

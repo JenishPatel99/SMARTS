@@ -73,26 +73,24 @@ const treeData = [
 ];
 
 export default function ControlPanel({ showControls, toggleControlModes }) {
-  const [expandedKeys, setExpandedKeys] = useState([
-    agentModes.egoObs,
-  ]);
+  const [expandedKeys, setExpandedKeys] = useState([agentModes.egoObs]);
   const [checkedKeys, setCheckedKeys] = useState([
     attrs.score,
-    agentModes.socialObs
+    agentModes.socialObs,
   ]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
 
   const onExpand = (expandedKeys) => {
     // if not set autoExpandParent to false, if children expanded, parent can not collapse.
     // or, you can remove all expanded children keys.
-    console.log(expandedKeys)
+    console.log(expandedKeys);
     setExpandedKeys(expandedKeys);
     setAutoExpandParent(false);
   };
 
   const onCheck = (checkedKeys, info) => {
     setCheckedKeys(checkedKeys);
-    toggleControlModes({[info.node.key]: [info.checked]});
+    toggleControlModes({ [info.node.key]: [info.checked] });
   };
 
   const onSelect = (selectedKeys, info) => {
@@ -101,11 +99,11 @@ export default function ControlPanel({ showControls, toggleControlModes }) {
       setCheckedKeys((prevKeys) =>
         prevKeys.filter((key) => key != info.node.key)
       );
-      toggleControlModes({[info.node.key]: false});
+      toggleControlModes({ [info.node.key]: false });
     } else {
       // add to list
       setCheckedKeys((prevKeys) => [...prevKeys, info.node.key]);
-      toggleControlModes({[info.node.key]: true});
+      toggleControlModes({ [info.node.key]: true });
     }
   };
 
