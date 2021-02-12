@@ -83,7 +83,6 @@ export default function ControlPanel({ showControls, toggleControlModes }) {
   const onExpand = (expandedKeys) => {
     // if not set autoExpandParent to false, if children expanded, parent can not collapse.
     // or, you can remove all expanded children keys.
-    console.log(expandedKeys);
     setExpandedKeys(expandedKeys);
     setAutoExpandParent(false);
   };
