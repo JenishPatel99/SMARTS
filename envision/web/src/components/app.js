@@ -32,8 +32,9 @@ const { Content } = Layout;
 import Header from "./header";
 import Simulation from "./simulation";
 import SimulationGroup from "./simulation_group";
+import { egoAttrs, socialAttrs, agentModes } from "./control_panel";
 import PlaybackBar from "./playback_bar";
-import ControlPanel from "./control_panel.js"
+import ControlPanel from "./control_panel.js";
 import { useToasts } from "react-toast-notifications";
 import transcode from "../helpers/transcode";
 
@@ -42,7 +43,23 @@ window.html2canvas = html2canvas;
 
 function App({ client }) {
   const [simulationIds, setSimulationIds] = useState([]);
-  const [showScores, setShowScores] = useState(true);
+  const [showControls, setShowControls] = useState(true);
+  const [controlModes, setControlModes] = useState({
+    [agentModes.egoObs]: {
+      [egoAttrs.score]: true,
+      [egoAttrs.speed]: false,
+      [egoAttrs.position]: false,
+      [egoAttrs.heading]: false,
+      [egoAttrs.laneId]: false,
+    },
+    [agentModes.socialObs]: {
+      [socialAttrs.score]: true,
+      [socialAttrs.speed]: false,
+      [socialAttrs.position]: false,
+      [socialAttrs.heading]: false,
+      [socialAttrs.laneId]: false,
+    },
+  });
   const [egoView, setEgoView] = useState(false);
   const [currentElapsedTime, setCurrentElapsedTime] = useState(0);
   const [totalElapsedTime, setTotalElapsedTime] = useState(1);
@@ -99,6 +116,18 @@ function App({ client }) {
     history.push(`/${simulationId}`);
   }
 
+  function toggleControlModes(agentMode, attr, on_off) {
+    console.log(controlModes);
+    console.log(agentMode, attr, on_off);
+    setControlModes((prevMode) => ({
+      ...prevMode,
+      [agentMode]: {
+        ...prevMode[agentMode],
+        [attr]: on_off,
+      },
+    }));
+  }
+
   return (
     <Layout className="layout" style={{ width: "100%", height: "100%" }}>
       <Header
@@ -107,7 +136,7 @@ function App({ client }) {
         onSelectSimulation={onSelectSimulation}
         onStartRecording={onStartRecording}
         onStopRecording={onStopRecording}
-        onToggleShowScores={(show) => setShowScores(show)}
+        onToggleShowControls={(show) => setShowControls(show)}
         onToggleEgoView={(view) => setEgoView(view)}
       />
       <Content>
@@ -116,7 +145,7 @@ function App({ client }) {
             <SimulationGroup
               client={client}
               simulationIds={simulationIds}
-              showScores={showScores}
+              showControls={showControls}
               egoView={egoView}
             />
           </Route>
@@ -135,18 +164,20 @@ function App({ client }) {
                   <div
                     style={{
                       display: "flex",
-                      flex:1,
+                      flex: 1,
                       flexDirection: "row",
                     }}
                   >
                     <ControlPanel
-                      showPanel={showScores}
+                      showControls={showControls}
+                      toggleControlModes={toggleControlModes}
                     />
                     <Simulation
                       canvasRef={simulationCanvasRef}
                       client={client}
                       simulationId={matchedSimulationId}
-                      showScores={showScores}
+                      showControls={showControls}
+                      controlModes={controlModes}
                       egoView={egoView}
                       onElapsedTimesChanged={(current, total) => {
                         setCurrentElapsedTime(current);

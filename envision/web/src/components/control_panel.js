@@ -17,117 +17,160 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-import React, { useState } from 'react';
-import { Tree } from 'antd';
-import AgentScores from "./agent_scores.js"
+import React, { useState } from "react";
+import { Tree } from "antd";
+
+export const egoAttrs = Object.freeze({
+  score: 0,
+  speed: 1,
+  position: 2,
+  heading: 3,
+  laneID: 4,
+});
+
+export const socialAttrs = Object.freeze({
+  score: 5,
+  speed: 6,
+  position: 7,
+  heading: 8,
+  laneid: 9,
+});
+
+export const agentModes = Object.freeze({
+  egoObs: 10,
+  socialObs: 11,
+});
 
 const treeData = [
-    {
-        title: 'Vehicle Observation',
-        key: 'Vehicle Observation',
+  {
+    title: "Vehicle Observation",
+    key: "Vehicle Observation",
+    children: [
+      {
+        title: "Ego Agent Observation",
+        key: "Ego Agent Observation",
         children: [
-            {
-                title: 'Ego Agent Observation',
-                key: 'Ego Agent Observation',
-                children: [
-                    {
-                        title: 'score',
-                        key: 'egoScore',
-                    },
-                    {
-                        title: 'speed',
-                        key: 'egoSpeed',
-                    },
-                    {
-                        title: 'position',
-                        key: 'egoPosition',
-                    },
-                    {
-                        title: 'heading',
-                        key: 'egoHeading',
-                    },
-                    {
-                        title: 'lane id',
-                        key: 'egoLaneID',
-                    },
-                ],
-            },
-            {
-                title: 'Social Agent Observation',
-                key: 'Social Agent Observation',
-                children: [
-                    {
-                        title: 'score',
-                        key: 'socialScore',
-                    },
-                    {
-                        title: 'speed',
-                        key: 'socialSpeed',
-                    },
-                    {
-                        title: 'position',
-                        key: 'socialPosition',
-                    },
-                    {
-                        title: 'heading',
-                        key: 'socialHeading',
-                    },
-                    {
-                        title: 'lane id',
-                        key: 'socialLaneid',
-                    },
-                ],
-            },
+          {
+            title: "score",
+            key: egoAttrs.score,
+          },
+          {
+            title: "speed",
+            key: egoAttrs.speed,
+          },
+          {
+            title: "position",
+            key: egoAttrs.position,
+          },
+          {
+            title: "heading",
+            key: egoAttrs.heading,
+          },
+          {
+            title: "lane id",
+            key: egoAttrs.laneID,
+          },
         ],
-    }
+      },
+      {
+        title: "Social Agent Observation",
+        key: "Social Agent Observation",
+        children: [
+          {
+            title: "score",
+            key: socialAttrs.score,
+          },
+          {
+            title: "speed",
+            key: socialAttrs.speed,
+          },
+          {
+            title: "position",
+            key: socialAttrs.position,
+          },
+          {
+            title: "heading",
+            key: socialAttrs.heading,
+          },
+          {
+            title: "lane id",
+            key: socialAttrs.laneid,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
-export default function ControlPanel({ showPanel }) {
-    const [expandedKeys, setExpandedKeys] = useState(['Ego Agent Observation', '0-0-1']);
-    const [checkedKeys, setCheckedKeys] = useState(['egoScore']);
-    const [selectedKeys, setSelectedKeys] = useState([]);
-    const [autoExpandParent, setAutoExpandParent] = useState(true);
+export default function ControlPanel({ showControls, toggleControlModes }) {
+  const [expandedKeys, setExpandedKeys] = useState([
+    "Ego Agent Observation",
+    "Social Agent Observation",
+  ]);
+  const [checkedKeys, setCheckedKeys] = useState([
+    egoAttrs.score,
+    socialAttrs.score,
+  ]);
+  const [autoExpandParent, setAutoExpandParent] = useState(true);
 
-    const onExpand = (expandedKeys) => {
-        // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-        console.log('onExpand', expandedKeys);
-        // or, you can remove all expanded children keys.
+  const onExpand = (expandedKeys) => {
+    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+    // or, you can remove all expanded children keys.
+    setExpandedKeys(expandedKeys);
+    setAutoExpandParent(false);
+  };
 
-        setExpandedKeys(expandedKeys);
-        setAutoExpandParent(false);
-    };
+  const updateToggle = (attr, on_off) => {
+    if (Object.values(egoAttrs).indexOf(attr) >= 0) {
+      toggleControlModes(agentModes.egoObs, attr, on_off);
+    } else {
+      toggleControlModes(agentModes.socialObs, attr, on_off);
+    }
+  };
 
-    const onCheck = (checkedKeys) => {
-        console.log('onCheck', checkedKeys);
-        setCheckedKeys(checkedKeys);
-    };
+  const onCheck = (checkedKeys, info) => {
+    setCheckedKeys(checkedKeys);
+    updateToggle(info.node.key, info.checked);
+  };
 
-    const onSelect = (selectedKeys, info) => {
-        console.log('onSelect', info);
-        setSelectedKeys(selectedKeys);
-    };
+  const onSelect = (selectedKeys, info) => {
+    if (checkedKeys.includes(info.node.key)) {
+      // remove from list
+      setCheckedKeys((prevKeys) =>
+        prevKeys.filter((key) => key != info.node.key)
+      );
+      updateToggle(info.node.key, false);
+    } else {
+      // add to list
+      setCheckedKeys((prevKeys) => [...prevKeys, info.node.key]);
+      updateToggle(info.node.key, true);
+    }
+  };
 
-    return (<div style={{
+  return (
+    <div
+      style={{
         zIndex: "1",
         position: "relative",
         display: "flex",
         top: "0",
         left: "0",
         maxWidth: "50%",
-        paddingRight:'3px',
-    }}>
-        {showPanel ?
-            <Tree
-                checkable
-                onExpand={onExpand}
-                expandedKeys={expandedKeys}
-                autoExpandParent={autoExpandParent}
-                onCheck={onCheck}
-                checkedKeys={checkedKeys}
-                onSelect={onSelect}
-                selectedKeys={selectedKeys}
-                treeData={treeData}
-            />
-            : null}
-    </div>)
+        paddingRight: "3px",
+      }}
+    >
+      {showControls ? (
+        <Tree
+          checkable
+          onExpand={onExpand}
+          expandedKeys={expandedKeys}
+          autoExpandParent={autoExpandParent}
+          onCheck={onCheck}
+          checkedKeys={checkedKeys}
+          onSelect={onSelect}
+          treeData={treeData}
+        />
+      ) : null}
+    </div>
+  );
 }

@@ -29,7 +29,7 @@ import { ToastProvider } from "react-toast-notifications";
 import Snack from "./components/snack";
 
 let client = new Client({
-  endpoint: 'http://localhost:8081',
+  endpoint: "http://localhost:8081",
   delay: 2000,
   retries: 10,
 });

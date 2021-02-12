@@ -41,7 +41,7 @@ import DrivenPaths from "./driven_paths.js";
 import MissionRoutes from "./mission_routes.js";
 import Waypoints from "./waypoints.js";
 import TrafficDividers from "./traffic_dividers.js";
-import ControlPanel from "./control_panel.js"
+import { egoAttrs, socialAttrs, agentModes } from "./control_panel";
 
 import AgentScores from "./agent_scores";
 import earcut from "earcut";
@@ -52,8 +52,8 @@ window.earcut = earcut;
 export default function Simulation({
   simulationId,
   client,
-  showScores,
   egoView,
+  controlModes,
   canvasRef = null,
   onElapsedTimesChanged = (current, total) => {},
   style = {},
@@ -213,10 +213,6 @@ export default function Simulation({
     <div
       style={{ position: "relative", width: "100%", height: "100%", ...style }}
     >
-      {/* <ControlPanel
-        scores={worldState.scores}
-        showPanel={showScores}
-      /> */}
       <SceneComponent
         antialias
         onSceneReady={onSceneReady}
@@ -262,7 +258,9 @@ export default function Simulation({
         laneDividerPos={laneDividerPos}
         edgeDividerPos={edgeDividerPos}
       />
-      <AgentScores
+      {controlModes[agentModes.egoObs][egoAttrs.score] ||
+      controlModes[agentModes.socialObs][socialAttrs.score] ? (
+        <AgentScores
           style={{
             zIndex: "1",
             position: "absolute",
@@ -272,6 +270,7 @@ export default function Simulation({
           }}
           scores={worldState.scores}
         />
+      ) : null}
     </div>
   );
 }
