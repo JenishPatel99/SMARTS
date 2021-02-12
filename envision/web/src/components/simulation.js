@@ -213,10 +213,10 @@ export default function Simulation({
     <div
       style={{ position: "relative", width: "100%", height: "100%", ...style }}
     >
-      <ControlPanel
+      {/* <ControlPanel
         scores={worldState.scores}
         showPanel={showScores}
-      />
+      /> */}
       <SceneComponent
         antialias
         onSceneReady={onSceneReady}
@@ -262,7 +262,7 @@ export default function Simulation({
         laneDividerPos={laneDividerPos}
         edgeDividerPos={edgeDividerPos}
       />
-      {/* <AgentScores
+      <AgentScores
           style={{
             zIndex: "1",
             position: "absolute",
@@ -271,7 +271,7 @@ export default function Simulation({
             maxWidth: "100%",
           }}
           scores={worldState.scores}
-        /> */}
+        />
     </div>
   );
 }

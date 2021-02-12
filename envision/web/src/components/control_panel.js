@@ -82,14 +82,15 @@ const treeData = [
     }
 ];
 
-export default function ControlPanel({ scores, showPanel }) {
+export default function ControlPanel({ showPanel }) {
     const [expandedKeys, setExpandedKeys] = useState(['Ego Agent Observation', '0-0-1']);
     const [checkedKeys, setCheckedKeys] = useState(['egoScore']);
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [autoExpandParent, setAutoExpandParent] = useState(true);
 
     const onExpand = (expandedKeys) => {
-        console.log('onExpand', expandedKeys); // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+        // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+        console.log('onExpand', expandedKeys);
         // or, you can remove all expanded children keys.
 
         setExpandedKeys(expandedKeys);
@@ -110,10 +111,10 @@ export default function ControlPanel({ scores, showPanel }) {
         zIndex: "1",
         position: "relative",
         display: "flex",
-        "flex-direction": "row",
         top: "0",
         left: "0",
         maxWidth: "50%",
+        paddingRight:'3px',
     }}>
         {showPanel ?
             <Tree
@@ -128,16 +129,5 @@ export default function ControlPanel({ scores, showPanel }) {
                 treeData={treeData}
             />
             : null}
-        <AgentScores
-            style={{
-                zIndex: "1",
-                position: "relative",
-                display: "inline-block",
-                top: "0",
-                left: "0",
-                maxWidth: "100%",
-            }}
-            scores={scores}
-        />
     </div>)
 }

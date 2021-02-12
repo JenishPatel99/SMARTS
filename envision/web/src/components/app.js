@@ -33,6 +33,7 @@ import Header from "./header";
 import Simulation from "./simulation";
 import SimulationGroup from "./simulation_group";
 import PlaybackBar from "./playback_bar";
+import ControlPanel from "./control_panel.js"
 import { useToasts } from "react-toast-notifications";
 import transcode from "../helpers/transcode";
 
@@ -131,18 +132,29 @@ function App({ client }) {
                     flexDirection: "column",
                   }}
                 >
-                  <Simulation
-                    canvasRef={simulationCanvasRef}
-                    client={client}
-                    simulationId={matchedSimulationId}
-                    showScores={showScores}
-                    egoView={egoView}
-                    onElapsedTimesChanged={(current, total) => {
-                      setCurrentElapsedTime(current);
-                      setTotalElapsedTime(total);
+                  <div
+                    style={{
+                      display: "flex",
+                      flex:1,
+                      flexDirection: "row",
                     }}
-                    style={{ flex: "1" }}
-                  />
+                  >
+                    <ControlPanel
+                      showPanel={showScores}
+                    />
+                    <Simulation
+                      canvasRef={simulationCanvasRef}
+                      client={client}
+                      simulationId={matchedSimulationId}
+                      showScores={showScores}
+                      egoView={egoView}
+                      onElapsedTimesChanged={(current, total) => {
+                        setCurrentElapsedTime(current);
+                        setTotalElapsedTime(total);
+                      }}
+                      style={{ flex: "1" }}
+                    />
+                  </div>
                   <PlaybackBar
                     currentTime={currentElapsedTime}
                     totalTime={totalElapsedTime}

@@ -117,7 +117,7 @@ export default function Header_({
 
       <Space style={{ float: "right" }}>
         <Checkbox defaultChecked onClick={toggleShowScores}>
-          Show Scores
+          Show Controls
         </Checkbox>
         <Checkbox onClick={toggleEgoView}>Egocentric View</Checkbox>
       </Space>
