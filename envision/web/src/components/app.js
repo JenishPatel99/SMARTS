@@ -32,7 +32,7 @@ const { Content } = Layout;
 import Header from "./header";
 import Simulation from "./simulation";
 import SimulationGroup from "./simulation_group";
-import { egoAttrs, socialAttrs, agentModes } from "./control_panel";
+import { attrs, agentModes } from "./control_panel";
 import PlaybackBar from "./playback_bar";
 import ControlPanel from "./control_panel.js";
 import { useToasts } from "react-toast-notifications";
@@ -45,20 +45,12 @@ function App({ client }) {
   const [simulationIds, setSimulationIds] = useState([]);
   const [showControls, setShowControls] = useState(true);
   const [controlModes, setControlModes] = useState({
-    [agentModes.egoObs]: {
-      [egoAttrs.score]: true,
-      [egoAttrs.speed]: false,
-      [egoAttrs.position]: false,
-      [egoAttrs.heading]: false,
-      [egoAttrs.laneId]: false,
-    },
-    [agentModes.socialObs]: {
-      [socialAttrs.score]: true,
-      [socialAttrs.speed]: false,
-      [socialAttrs.position]: false,
-      [socialAttrs.heading]: false,
-      [socialAttrs.laneId]: false,
-    },
+    [attrs.score]: true,
+    [attrs.speed]: false,
+    [attrs.position]: false,
+    [attrs.heading]: false,
+    [attrs.laneId]: false,
+    [agentModes.socialObs]: true,
   });
   const [egoView, setEgoView] = useState(false);
   const [currentElapsedTime, setCurrentElapsedTime] = useState(0);
@@ -116,15 +108,10 @@ function App({ client }) {
     history.push(`/${simulationId}`);
   }
 
-  function toggleControlModes(agentMode, attr, on_off) {
-    console.log(controlModes);
-    console.log(agentMode, attr, on_off);
+  function toggleControlModes(attr) {
     setControlModes((prevMode) => ({
       ...prevMode,
-      [agentMode]: {
-        ...prevMode[agentMode],
-        [attr]: on_off,
-      },
+      ...attr,
     }));
   }
 

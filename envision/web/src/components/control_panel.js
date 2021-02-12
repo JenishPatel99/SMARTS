@@ -20,7 +20,7 @@
 import React, { useState } from "react";
 import { Tree } from "antd";
 
-export const egoAttrs = Object.freeze({
+export const attrs = Object.freeze({
   score: 0,
   speed: 1,
   position: 2,
@@ -28,17 +28,9 @@ export const egoAttrs = Object.freeze({
   laneID: 4,
 });
 
-export const socialAttrs = Object.freeze({
-  score: 5,
-  speed: 6,
-  position: 7,
-  heading: 8,
-  laneid: 9,
-});
-
 export const agentModes = Object.freeze({
-  egoObs: 10,
-  socialObs: 11,
+  egoObs: "5",
+  socialObs: 6,
 });
 
 const treeData = [
@@ -48,55 +40,33 @@ const treeData = [
     children: [
       {
         title: "Ego Agent Observation",
-        key: "Ego Agent Observation",
+        key: agentModes.egoObs,
         children: [
           {
             title: "score",
-            key: egoAttrs.score,
+            key: attrs.score,
           },
           {
             title: "speed",
-            key: egoAttrs.speed,
+            key: attrs.speed,
           },
           {
             title: "position",
-            key: egoAttrs.position,
+            key: attrs.position,
           },
           {
             title: "heading",
-            key: egoAttrs.heading,
+            key: attrs.heading,
           },
           {
             title: "lane id",
-            key: egoAttrs.laneID,
+            key: attrs.laneID,
           },
         ],
       },
       {
-        title: "Social Agent Observation",
-        key: "Social Agent Observation",
-        children: [
-          {
-            title: "score",
-            key: socialAttrs.score,
-          },
-          {
-            title: "speed",
-            key: socialAttrs.speed,
-          },
-          {
-            title: "position",
-            key: socialAttrs.position,
-          },
-          {
-            title: "heading",
-            key: socialAttrs.heading,
-          },
-          {
-            title: "lane id",
-            key: socialAttrs.laneid,
-          },
-        ],
+        title: "Inclucdes Social Agents",
+        key: agentModes.socialObs,
       },
     ],
   },
@@ -104,33 +74,25 @@ const treeData = [
 
 export default function ControlPanel({ showControls, toggleControlModes }) {
   const [expandedKeys, setExpandedKeys] = useState([
-    "Ego Agent Observation",
-    "Social Agent Observation",
+    agentModes.egoObs,
   ]);
   const [checkedKeys, setCheckedKeys] = useState([
-    egoAttrs.score,
-    socialAttrs.score,
+    attrs.score,
+    agentModes.socialObs
   ]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
 
   const onExpand = (expandedKeys) => {
     // if not set autoExpandParent to false, if children expanded, parent can not collapse.
     // or, you can remove all expanded children keys.
+    console.log(expandedKeys)
     setExpandedKeys(expandedKeys);
     setAutoExpandParent(false);
   };
 
-  const updateToggle = (attr, on_off) => {
-    if (Object.values(egoAttrs).indexOf(attr) >= 0) {
-      toggleControlModes(agentModes.egoObs, attr, on_off);
-    } else {
-      toggleControlModes(agentModes.socialObs, attr, on_off);
-    }
-  };
-
   const onCheck = (checkedKeys, info) => {
     setCheckedKeys(checkedKeys);
-    updateToggle(info.node.key, info.checked);
+    toggleControlModes({[info.node.key]: [info.checked]});
   };
 
   const onSelect = (selectedKeys, info) => {
@@ -139,11 +101,11 @@ export default function ControlPanel({ showControls, toggleControlModes }) {
       setCheckedKeys((prevKeys) =>
         prevKeys.filter((key) => key != info.node.key)
       );
-      updateToggle(info.node.key, false);
+      toggleControlModes({[info.node.key]: false});
     } else {
       // add to list
       setCheckedKeys((prevKeys) => [...prevKeys, info.node.key]);
-      updateToggle(info.node.key, true);
+      toggleControlModes({[info.node.key]: true});
     }
   };
 
