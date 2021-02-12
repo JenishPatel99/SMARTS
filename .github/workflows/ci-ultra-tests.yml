@@ -7,6 +7,17 @@ jobs:
     runs-on: ubuntu-18.04
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     container: huaweinoah/smarts:v0.4.3-pre
+    strategy:
+      matrix:
+        tests:
+          - /tests/test_adapter.py
+          - /tests/test_analysis.py
+          - /tests/test_env.py
+          - /tests/test_episode.py
+          - /tests/test_evaluate.py
+          - /tests/test_scenarios.py
+          - /tests/test_social_vehicles.py
+          - /tests/test_train.py
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -32,7 +43,9 @@ jobs:
           cd ultra
           . .venv/bin/activate
           scl scenario build-all ultra/scenarios/pool
-          pytest -v ./tests/
+          pytest -v \
+          --forked \
+          ${{matrix.tests}}
       - name: Run Header test
         run : |
           cd ultra
